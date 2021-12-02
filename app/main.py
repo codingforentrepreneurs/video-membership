@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from . import config
 
+
+app = FastAPI()
+# settings = config.get_settings()
 
 @app.get("/")
 def homepage():
