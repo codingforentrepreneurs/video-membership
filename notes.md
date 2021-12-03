@@ -32,3 +32,24 @@ AstraDB - Managed NoSQL Cassandra
 - Database for Testing
     - keyspace -> Project 1
         - tables (correspond to prod)
+
+
+## Create a user via shell
+
+
+```python
+from app import db
+from app.users.models import User
+
+db.get_session()
+User.objects.create(email='hello@teamcfe.com', password='abc123')
+User.objects.create(email='hello@teamcfe.com', password='abc123d')
+```
+
+```python
+
+q = User.objects.all()
+
+for user in q:
+    print(user.email, user.user_id, user.password)
+```
