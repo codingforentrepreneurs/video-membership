@@ -2,6 +2,11 @@ from pydantic import BaseModel, EmailStr, SecretStr, validator
 
 from .models import User
 
+class UserLoginSchema(BaseModel):
+    email: EmailStr
+    password: SecretStr
+
+
 class UserSignupSchema(BaseModel):
     email: EmailStr
     password: SecretStr
