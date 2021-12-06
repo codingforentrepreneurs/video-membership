@@ -4,6 +4,16 @@
 {% block content %}
 <h1>Sign Up</h1>
 
+{% if errors %}
+<div style='margin-bottom:15px;'>
+<p style='margin-bottom:2px;'>An error occurred please check the following:</p>
+    {% for error in errors %} 
+        <li><b>{{ error.loc[0] }}</b>: {{ error.msg }}</li>
+    {% endfor %}
+
+</div>
+{% endif %}
+
 <form method='POST'>
     <div>
         <label for='email'>Email</label>
