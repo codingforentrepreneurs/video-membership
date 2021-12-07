@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, db, utils
+from .shortcuts import render
 from .users.models import User
 from .users.schemas import (
     UserLoginSchema,
@@ -35,17 +36,14 @@ def on_startup():
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
     context = {
-        "request": request,
         "abc": "abc"
     }
-    return templates.TemplateResponse("home.html", context)
+    return render(request, "home.html", context)
 
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
-    return templates.TemplateResponse("auth/login.html", {
-        "request": request,
-    })
+    return render(request, "auth/login.html")
 
 
 @app.post("/login", response_class=HTMLResponse)
@@ -57,19 +55,20 @@ def login_post_view(request: Request,
         "password": password,
     }
     data, errors = utils.valid_schema_data_or_error(raw_data, UserLoginSchema)
+    context = {
+                "data": data,
+                "errors": errors,
+            }
+    if len(errors) > 0:
+        return render(request, "auth/login.html", context, status_code=400)
+
     print(data['password'].get_secret_value())
-    return templates.TemplateResponse("auth/login.html", {
-        "request": request,
-        "data": data,
-        "errors": errors,
-    })
+    return render(request, "auth/login.html", context)
 
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_get_view(request: Request):
-    return templates.TemplateResponse("auth/signup.html", {
-        "request": request,
-    })
+    return render(request, "auth/signup.html")
 
 
 @app.post("/signup", response_class=HTMLResponse)
@@ -84,8 +83,9 @@ def signup_post_view(request: Request,
         "password_confirm": password_confirm
     }
     data, errors = utils.valid_schema_data_or_error(raw_data, UserSignupSchema)
-    return templates.TemplateResponse("auth/signup.html", {
-        "request": request,
+    if len(errors) > 0:
+        return render(request, "auth/signup.html", context, status_code=400)
+    return render(request, "auth/signup.html", {
         "data": data,
         "errors": errors,
     })
