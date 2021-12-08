@@ -1,10 +1,10 @@
 import datetime
 from jose import jwt, ExpiredSignatureError
-from app import conf
+from app import config
 
 from .models import User
 
-settings = conf.get_settings()
+settings = config.get_settings()
 
 def authenticate(email, password):
     # step 1
@@ -19,18 +19,18 @@ def authenticate(email, password):
 def login(user_obj, expires=5):
     # step 2
     raw_data = {
-        "user_id": f"{user_obj.id}",
+        "user_id": f"{user_obj.user_id}",
         "role": "admin",
         "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=expires)
     }
-    return jwt.encode(raw_data, settings.secret_key, algorithm=settings.jwt_alogrithm)
+    return jwt.encode(raw_data, settings.secret_key, algorithm=settings.jwt_algorithm)
 
 
 def verify_user_id(token):
     # step 3
     data = {}
     try:
-        data = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_alogrithm])
+        data = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
     except ExpiredSignatureError as e:
         print(e)
     except:
