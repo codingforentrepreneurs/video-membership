@@ -1,12 +1,13 @@
 import json
 import pathlib
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, db, utils
 from .shortcuts import redirect, render
+from .users.decorators import login_required
 from .users.models import User
 from .users.schemas import (
     UserLoginSchema,
@@ -40,6 +41,15 @@ def homepage(request: Request):
     }
     return render(request, "home.html", context)
 
+
+@app.get("/account", response_class=HTMLResponse)
+@login_required
+def account_view(request: Request):
+    """
+    hello world
+    """
+    context = {}
+    return render(request, "account.html", context)
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
