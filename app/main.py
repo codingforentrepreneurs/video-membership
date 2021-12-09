@@ -23,6 +23,7 @@ templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 DB_SESSION = None
 # settings = config.get_settings()
 
+from .handlers import * # noqa
 
 
 @app.on_event("startup")
