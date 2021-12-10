@@ -8,6 +8,9 @@ settings = get_settings()
 
 from .extractors import extract_video_id
 
+
+# Unlisted Video -> video_id -> lock it down
+
 class Video(Model):
     __keyspace__ = settings.keyspace
     host_id = columns.Text(primary_key=True) # YouTube, Vimeo
@@ -21,7 +24,7 @@ class Video(Model):
         return self.__repr__()
 
     def __repr__(self):
-        return f"Video(email={self.email}, user_id={self.user_id})"
+        return f"Video(host_id={self.host_id}, host_service={self.host_service})"
 
     @staticmethod
     def add_video(url, user_id=None):
@@ -31,12 +34,12 @@ class Video(Model):
         host_id = extract_video_id(url)
         if host_id is None:
             raise Exception("Invalid YouTube Video URL")
-        user_id = User.check_exists(user_id)
-        if user_id is None:
+        user_exists = User.check_exists(user_id)
+        if user_exists is None:
             raise Exception("Invalid user_id")
         # user_obj = User.by_user_id(user_id)
         # user_obj.display_name
-        q = Video.objects.filter(host_id=host_id, user_id=user_id)
+        q = Video.objects.allow_filtering().filter(host_id=host_id, user_id=user_id)
         if q.count() != 0:
             raise Exception("Video already added")
         return Video.create(host_id=host_id, user_id=user_id, url=url)
