@@ -35,6 +35,8 @@ class VideoCreateSchema(BaseModel):
             video_obj = Video.add_video(url, user_id=user_id)
         except InvalidYouTubeVideoURLException:
             raise ValueError(f"{url} is not a valid YouTube URL")
+        except VideoAlreadyAddedException:
+            raise ValueError(f"{url} has already been added to your account.")
         except InvalidUserIDException:
             raise ValueError("There's a problem with your account, please try again.")
         except:
