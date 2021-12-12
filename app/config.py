@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     db_client_secret: str = Field(..., env='ASTRADB_CLIENT_SECRET')
     secret_key: str = Field(...)
     jwt_algorithm: str = Field(default='HS256')
+    session_duration: int = Field(default=86400)
 
     class Config:
         env_file = '.env'

@@ -16,7 +16,7 @@ def authenticate(email, password):
         return None
     return user_obj
 
-def login(user_obj, expires=5):
+def login(user_obj, expires=settings.session_duration):
     # step 2
     raw_data = {
         "user_id": f"{user_obj.user_id}",
