@@ -33,7 +33,11 @@ class Video(Model):
         return f"Video(host_id={self.host_id}, host_service={self.host_service})"
 
     def as_data(self):
-        return {f"{self.host_service}_id": self.host_id}
+        return {f"{self.host_service}_id": self.host_id, "path": self.path}
+
+    @property
+    def path(self):
+        return f"/videos/{self.host_id}"
 
     @staticmethod
     def add_video(url, user_id=None):
