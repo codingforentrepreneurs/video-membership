@@ -53,7 +53,7 @@ class Video(Model):
             raise InvalidUserIDException("Invalid user_id")
         # user_obj = User.by_user_id(user_id)
         # user_obj.display_name
-        q = Video.objects.allow_filtering().filter(host_id=host_id, user_id=user_id)
+        q = Video.objects.allow_filtering().filter(host_id=host_id) # , user_id=user_id)
         if q.count() != 0:
             raise VideoAlreadyAddedException("Video already added")
         return Video.create(host_id=host_id, user_id=user_id, url=url, **kwargs)
