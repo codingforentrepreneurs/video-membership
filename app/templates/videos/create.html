@@ -9,6 +9,11 @@
 
 <form method='POST'>
     <div>
+        <label for='title'>Title</label>
+        <input type='text' name='title' id='title' placeholder='Your Video Title' value="{% if title %}{{ title }}{% endif %}" />
+    </div>
+
+    <div>
         <label for='url'>YouTube Link</label>
         <input type='text' name='url' id='url' placeholder='https://www.youtube.com/watch?v=GlDr6aKBtFg' value="{% if url %}{{ url }}{% endif %}" />
     </div>

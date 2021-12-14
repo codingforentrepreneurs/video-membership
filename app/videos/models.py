@@ -22,15 +22,16 @@ class Video(Model):
     host_id = columns.Text(primary_key=True) # YouTube, Vimeo
     db_id = columns.UUID(primary_key=True, default=uuid.uuid1) # UUID1
     host_service = columns.Text(default='youtube')
+    title = columns.Text()
     url = columns.Text() # secure
     user_id = columns.UUID()
-    # user_display_name
+
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return f"Video(host_id={self.host_id}, host_service={self.host_service})"
+        return f"Video(title={self.title}, host_id={self.host_id}, host_service={self.host_service})"
 
     def as_data(self):
         return {f"{self.host_service}_id": self.host_id, "path": self.path}
@@ -40,7 +41,7 @@ class Video(Model):
         return f"/videos/{self.host_id}"
 
     @staticmethod
-    def add_video(url, user_id=None):
+    def add_video(url, user_id=None, **kwargs):
         # extract video_id from url
         # video_id = host_id
         # Service API - YouTube / Vimeo / etc
@@ -55,7 +56,7 @@ class Video(Model):
         q = Video.objects.allow_filtering().filter(host_id=host_id, user_id=user_id)
         if q.count() != 0:
             raise VideoAlreadyAddedException("Video already added")
-        return Video.create(host_id=host_id, user_id=user_id, url=url)
+        return Video.create(host_id=host_id, user_id=user_id, url=url, **kwargs)
 
 
 
