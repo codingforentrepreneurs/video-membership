@@ -18,7 +18,9 @@ from .users.schemas import (
 )
 from .videos.models import Video
 from .videos.routers import router as video_router
+
 from .watch_events.models import WatchEvent
+from .watch_events.schemas import WatchEventSchema
 
 DB_SESSION = None
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
@@ -120,17 +122,15 @@ def users_list_view():
 # json.loads(json_str) -> dict
 
 
-@app.post("/watch-event")
-def watch_event_view(request:Request, data:dict):
+@app.post("/watch-event", response_model=WatchEventSchema)
+def watch_event_view(request:Request, watch_event:WatchEventSchema):
+    cleaned_data = watch_event.dict()
+    data = cleaned_data.copy()
+    data.update({
+        "user_id": request.user.username
+    })
     print("data", data)
     if (request.user.is_authenticated):
-        obj = WatchEvent.objects.create(
-            host_id=data.get("videoId"),
-            user_id=request.user.username,
-            start_time=data.get('startTime'),
-            end_time=data.get('currentTime'),
-            duration=data.get('duration'),
-            complete=data.get('complete')
-        )
-        print(obj)
-    return {"working": True}
+        WatchEvent.objects.create(**data)
+        return watch_event
+    return watch_event

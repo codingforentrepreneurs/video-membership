@@ -92,10 +92,11 @@
     function storeWatchEvent(){
         var duration = player.getDuration()
         var data = {
-            currentTime: currentTime,
-            startTime: initialStartTime,
+            path: window.location.pathname,
+            end_time: currentTime,
+            start_time: initialStartTime,
             duration: duration,
-            videoId: videoId,
+            host_id: videoId,
             complete: (duration * .98) < currentTime
         }
         timeSinceLastSaved = 0;
