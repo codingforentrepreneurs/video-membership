@@ -7,5 +7,101 @@
 {{ host_id }}
 {{ object }}
 
-{{ object.render()|safe }}
+
+
+<div id='yt-video' data-video-id="{{ host_id }}" data-start-time='0'></div>
+
+<div><code>{{ object.render() }}</code></div>
+
+
+<script>
+    var youtubeVideoDiv = document.getElementById('yt-video')
+    if (youtubeVideoDiv){
+        var videoId = youtubeVideoDiv.getAttribute("data-video-id")
+        var defaultStartTime = 0;
+        var initialStartTime = parseInt(youtubeVideoDiv.getAttribute("data-start-time")) || defaultStartTime;
+        var player;
+        var currentTime;
+        var isPlaying;
+        var monitorTimeOut;
+        var monitorTimeInterval = 1000;
+        var timeSinceLastSaved = 0;
+        var timeIntervalForSave = 5000;
+        function onYouTubeIframeAPIReady() {
+            // console.log("hello world");
+            player = new YT.Player('yt-video', {
+                height: '390',
+                width: '640',
+                videoId: videoId,
+                playerVars: {
+                    'modestbranding': 1,
+                    'autoplay': 1,
+                    'start': 0,
+                    'playsinline': 1,
+                    'controls': 1,
+                }, 
+                events: {
+                    onReady: onPlayerReady, 
+                    onStateChange: onPlayerStateChange
+                }
+            })
+        };
+    }
+
+    function onPlayerReady(event){
+        player.seekTo(initialStartTime)
+        // player.playVideo()
+    }
+    function monitorCurrentPlayback() {
+        currentTime = player.getCurrentTime()
+        console.log('currentTime', currentTime)
+        timeSinceLastSaved += monitorTimeInterval
+        if (isPlaying) {
+            monitorTimeOut = setTimeout(monitorCurrentPlayback, monitorTimeInterval) 
+        }
+
+        if (timeSinceLastSaved > timeIntervalForSave) {
+            storeWatchEvent()
+        }
+    }
+    function onPlayerStateChange(event) {
+       
+        if (event.data === YT.PlayerState.PLAYING) {
+            console.log("is playing")
+            isPlaying = true
+            monitorCurrentPlayback()
+        }
+
+        else if (event.data === YT.PlayerState.PAUSED) {
+            console.log("is paused")
+            isPlaying = false
+            clearTimeout(monitorTimeOut)
+            monitorCurrentPlayback()
+            storeWatchEvent()
+        }
+
+        else if (event.data === YT.PlayerState.ENDED) {
+            console.log("is ended")
+            isPlaying = false
+            clearTimeout(monitorTimeOut)
+            monitorCurrentPlayback()
+            storeWatchEvent()
+        }
+    }
+
+    function storeWatchEvent(){
+        var data = {
+            currentTime: currentTime,
+            videoId: videoId
+        }
+        timeSinceLastSaved = 0;
+        console.log('saving...', data)
+    }
+
+
+</script>
+
+
 {% endblock %}
+
+

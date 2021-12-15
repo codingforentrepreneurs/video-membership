@@ -8,7 +8,14 @@
         {% block content %}
         <h1>Hello world</h1>
         {% endblock %}
+      
+        <script>
+            var tag = document.createElement("script");
+            tag.src ='https://www.youtube.com/iframe_api';
+            var firstScriptTag = document.getElementsByTagName("script")[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        </script>
 
     </body>
-
+   
 </html>
