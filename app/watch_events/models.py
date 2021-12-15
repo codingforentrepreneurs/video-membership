@@ -11,7 +11,7 @@ settings = config.get_settings()
 class WatchEvent(Model):
     __keyspace__ = settings.keyspace
     host_id = columns.Text(primary_key=True)
-    event_id = columns.TimeUUID(primary_key=True, clustering_order="ASC", default=uuid.uuid1)
+    event_id = columns.TimeUUID(primary_key=True, clustering_order="DESC", default=uuid.uuid1)
     user_id = columns.UUID(primary_key=True)
     path = columns.Text()
     start_time = columns.Double()
