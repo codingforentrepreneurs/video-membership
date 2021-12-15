@@ -24,7 +24,7 @@
         var currentTime;
         var isPlaying;
         var monitorTimeOut;
-        var monitorTimeInterval = 1000;
+        var monitorTimeInterval = 200;
         var timeSinceLastSaved = 0;
         var timeIntervalForSave = 5000;
         function onYouTubeIframeAPIReady() {
@@ -96,6 +96,25 @@
         }
         timeSinceLastSaved = 0;
         console.log('saving...', data)
+
+        // send POST data
+        // JSON -> JavaScript Object Notion
+        var reqOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }
+        fetch("/watch-event", reqOptions)
+        .then(response=>response.json())
+        .then(data=>{
+            console.log("success:", data)
+        })
+        .catch(err => {
+            // fetch to an error catching endpoint
+            console.log('error: ', err)
+        })
     }
 
 

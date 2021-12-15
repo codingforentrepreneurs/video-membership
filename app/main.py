@@ -111,3 +111,15 @@ def signup_post_view(request: Request,
 def users_list_view():
     q = User.objects.all().limit(10)
     return list(q)
+
+
+# import json
+# json.dumps() -> json string
+# json.loads(json_str) -> dict
+
+
+@app.post("/watch-event")
+def watch_event_view(request:Request, data:dict):
+    print("data", data)
+    print(request.user.is_authenticated)
+    return {"working": True}
