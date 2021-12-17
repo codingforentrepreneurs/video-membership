@@ -1,0 +1,5 @@
+{% if path and title %}
+<a href="{{ path }}">{{ title }}</a>
+{% elif path and not title %}
+<a href="{{ path }}">{{ path }}</a>
+{% endif %}

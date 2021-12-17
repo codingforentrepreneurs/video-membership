@@ -42,7 +42,7 @@ class Video(Model):
         return t.render(context)
 
     def as_data(self):
-        return {f"{self.host_service}_id": self.host_id, "path": self.path}
+        return {f"{self.host_service}_id": self.host_id, "path": self.path, "title": self.title}
 
     @property
     def path(self):
