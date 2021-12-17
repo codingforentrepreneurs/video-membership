@@ -5,6 +5,18 @@
 {% block content %}
 
 {% if object.title %}<h1>{{ object.title }}</h1>{% endif %}
+
+<div id='video-create-form'>
+
+</div>
+
+<button hx-get='/videos/create'
+    hx-trigger='click'
+    hx-target='#video-create-form'
+    hx-swap='beforeend'>
+    Add Video Form
+</button>
+
 {% endblock %}
 
 
