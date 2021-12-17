@@ -8,6 +8,9 @@ from starlette.authentication import requires
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, db, utils
+
+from .playlists.routers import router as playlist_router
+
 from .shortcuts import redirect, render
 from .users.backends import JWTCookieBackend
 from .users.decorators import login_required
@@ -27,6 +30,7 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 
 app = FastAPI()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
+app.include_router(playlist_router)
 app.include_router(video_router)
 app.include_router(watch_event_router)
 
