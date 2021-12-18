@@ -10,7 +10,7 @@
 
 </div>
 
-<button hx-get='/videos/create'
+<button hx-get='/playlists/{{ object.db_id }}/add-video'
     hx-trigger='click'
     hx-target='#video-create-form'
     hx-swap='beforeend'>
