@@ -113,8 +113,10 @@ def video_edit_view(request: Request, host_id: str):
 @router.post("/{host_id}/edit", response_class=HTMLResponse)
 @login_required
 def video_edit_post_view(
-        request: Request, 
+        request: Request,
+          host_id: str, 
         is_htmx=Depends(is_htmx), 
+        
         title: str=Form(...), 
         url: str = Form(...)):
     raw_data = {
@@ -128,4 +130,7 @@ def video_edit_post_view(
         return render(request, "videos/edit.html", context, status_code=400)
     obj.title = data.get('title') or obj.title
     obj.update_video_url(url, save=True)
-    return render(request, "videos/edit.html", context, status_code=400)
+    context = {
+        "object": obj
+    }
+    return render(request, "videos/edit.html", context)
