@@ -16,7 +16,9 @@ from app.shortcuts import (
 
 from app.watch_events.models import WatchEvent
 from .models import Video
-from .schemas import VideoCreateSchema
+from .schemas import (
+    VideoCreateSchema,
+    VideoEditSchema)
 
 
 router = APIRouter(
@@ -94,4 +96,36 @@ def video_detail_view(request: Request, host_id: str):
         "start_time": start_time,
         "object": obj
     }
-    return render(request, "videos/detail.html", context) 
+    return render(request, "videos/detail.html", context)
+
+
+@router.get("/{host_id}/edit", response_class=HTMLResponse)
+@login_required
+def video_edit_view(request: Request, host_id: str):
+    obj = get_object_or_404(Video, host_id=host_id)
+    context = {
+        "object": obj
+    }
+    return render(request, "videos/edit.html", context) 
+
+
+
+@router.post("/{host_id}/edit", response_class=HTMLResponse)
+@login_required
+def video_edit_post_view(
+        request: Request, 
+        is_htmx=Depends(is_htmx), 
+        title: str=Form(...), 
+        url: str = Form(...)):
+    raw_data = {
+        "title": title,
+        "url": url,
+        "user_id": request.user.username
+    }
+    obj = get_object_or_404(Video, host_id=host_id)
+    data, errors = utils.valid_schema_data_or_error(raw_data, VideoEditSchema)
+    if len(errors) > 0:
+        return render(request, "videos/edit.html", context, status_code=400)
+    obj.title = data.get('title') or obj.title
+    obj.update_video_url(url, save=True)
+    return render(request, "videos/edit.html", context, status_code=400)
