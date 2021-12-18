@@ -8,7 +8,17 @@
 <div id='video-container'>
     {% for video in object.get_videos() %}
         {% with path=video.path, title=video.title %}
-           <li>{% include 'videos/htmx/link.html' %}</li> 
+           <li id='video-item-{{ loop.index }}'>
+           
+               {% include 'videos/htmx/link.html' %}
+                <button 
+                    hx-post='/playlists/{{ object.db_id }}/{{ video.host_id }}/delete/'
+                    hx-target="#video-item-{{ loop.index }}"
+                    hx-vals='{"index": "{{ loop.index - 1 }}"}'
+                    
+                    >Remove</button>
+            
+            </li> 
         {% endwith %}
     {% endfor %}
 </div>
