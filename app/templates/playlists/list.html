@@ -3,14 +3,24 @@
 
 
 {% block content %}
+<div class='row'>
+    <div class='col-12 col-md-3'>
+        {% include 'playlists/sidebar.html' %}
 
-{% for object in object_list %}
-   
-    <li>
-        <a href="{{ object.path }}">
-        {% if not object.title %}{{ object.db_id }}{% else %}{{ object.title }}{% endif %}
-        </a>
-    </li>
-{% endfor %}
+    </div>
+    <div class='col-12 col-md-9'>
+            <h1>Playlists</h1>
+        <div class="list-group">
+        {% for object in object_list %}
+        
+            
+                <a class="list-group-item list-group-item-action" href="{{ object.path }}">
+                {% if not object.title %}{{ object.db_id }}{% else %}{{ object.title }}{% endif %}
+                </a>
 
+        {% endfor %}
+        </div>
+</div>
+
+</div>
 {% endblock %}

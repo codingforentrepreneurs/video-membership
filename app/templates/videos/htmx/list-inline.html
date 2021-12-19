@@ -3,6 +3,7 @@
     {% if not object.title %}{{ object.host_id }}{% else %}{{ object.title }}{% endif %}
     </a>
     <button 
+        class='btn btn-sm btn-outline-secondary mx-2'
         hx-get='/videos/{{ object.host_id }}/hx-edit' 
         hx-target='#video-inline-edit-{{ object.host_id }}'
         >

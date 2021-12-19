@@ -2,6 +2,8 @@
 
 
 {% block content %}
+<div class='row'>
+    <div class='col-md-4 text-center mx-auto'>
 <h1>Sign Up</h1>
 
 {% include 'snippets/form_errors.html' %}
@@ -9,20 +11,25 @@
 <form method='POST'>
     <div>
         <label for='email'>Email</label>
-        <input type='email' name='email' placeholder='your@email.com' />
+        <input class='form-control' type='email' name='email' placeholder='your@email.com' />
     </div>
 
     <div>
         <label for='password'>Password</label>
-        <input type='password' name='password' placeholder='your password' />
+        <input class='form-control' type='password' name='password' placeholder='your password' />
     </div>
 
     <div>
         <label for='password'>Confirm Password</label>
-        <input type='password' name='password_confirm' placeholder='Confirm your password' />
+        <input class='form-control' type='password' name='password_confirm' placeholder='Confirm your password' />
     </div>
-    <button type='submit' >sign up </button>
+    <button class='btn btn-primary mt-2' type='submit' >Sign up </button>
     
 </form>
+<div class='mt-3'>
+<p><a href='/login'>Do you need to login?</a></p>
+</div>
+</div>
+</div>
 
 {% endblock %}

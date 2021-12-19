@@ -2,8 +2,18 @@
 
 
 {% block content %}
-<h1>Add Video</h1>
+
+<div class='row'>
+    <div class='col-12 col-md-3'>
+        {% include 'videos/sidebar.html' %}
+
+    </div>
+    <div class='col-12 col-md-9'>
+        <h1>Add Video</h1>
 
 {% include 'videos/htmx/create.html' %}
 
+</div>
+
+</div>
 {% endblock %}

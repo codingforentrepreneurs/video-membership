@@ -3,33 +3,46 @@
 
 
 {% block content %}
+<div class='row'>
+    <div class='col-12 col-md-3'>
+        {% include 'playlists/sidebar.html' %}
 
-{% if object.title %}<h1>{{ object.title }}</h1>{% endif %}
-<div id='video-container'>
-    {% for video in object.get_videos() %}
-        {% with path=video.path, title=video.title %}
-           <li id='video-item-{{ loop.index }}'>
-           
-               {% include 'videos/htmx/link.html' %}
-                <button 
-                    hx-post='/playlists/{{ object.db_id }}/{{ video.host_id }}/delete/'
-                    hx-target="#video-item-{{ loop.index }}"
-                    hx-vals='{"index": "{{ loop.index - 1 }}"}'
+    </div>
+    <div class='col-12 col-md-9'>
+
+        {% if object.title %}<h1>{{ object.title }}</h1>{% endif %}
+        <div id='video-container'>
+            <ul class='list-group mb-3'>
+            {% for video in object.get_videos() %}
+                {% with path=video.path, title=video.title %}
+                <li class="list-group-item" id='video-item-{{ loop.index }}'>
+                
+                    {% include 'videos/htmx/link.html' %}
+                        <button 
+                            class='btn btn-sm btn-outline-secondary mx-2'
+                            hx-post='/playlists/{{ object.db_id }}/{{ video.host_id }}/delete/'
+                            hx-target="#video-item-{{ loop.index }}"
+                            hx-vals='{"index": "{{ loop.index - 1 }}"}'
+                            
+                            >Remove</button>
                     
-                    >Remove</button>
-            
-            </li> 
-        {% endwith %}
-    {% endfor %}
+                    </li> 
+                {% endwith %}
+            {% endfor %}
+        </ul>
+        </div>
+
+
+        <button 
+            class='btn btn-outline-secondary'    
+        hx-get='/playlists/{{ object.db_id }}/add-video'
+            hx-trigger='click'
+            hx-target='#video-container'
+            hx-swap='beforeend'>
+            Add Video Form
+        </button>
 </div>
-
-
-<button hx-get='/playlists/{{ object.db_id }}/add-video'
-    hx-trigger='click'
-    hx-target='#video-container'
-    hx-swap='beforeend'>
-    Add Video Form
-</button>
+</div>
 
 {% endblock %}
 

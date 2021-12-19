@@ -4,10 +4,21 @@
 
 {% block content %}
 
-{% for object in object_list %}
-<div style='margin:2rem;'>
-    {% include 'videos/htmx/list-inline.html' %}
+<div class='row'>
+    <div class='col-12 col-md-3'>
+        {% include 'videos/sidebar.html' %}
+
+    </div>
+    <div class='col-12 col-md-9'>
+        <h1>Videos</h1>
+
+        {% for object in object_list %}
+        <div class='border rounded p-3 mb-2'>
+            {% include 'videos/htmx/list-inline.html' %}
+        </div>
+        {% endfor %}
+
+    </div>
 </div>
-{% endfor %}
 
 {% endblock %}
