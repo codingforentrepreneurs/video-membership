@@ -11,6 +11,10 @@ from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, db, utils
 
+from .indexing.client import (
+    update_index,
+    search_index
+)
 from .playlists.routers import router as playlist_router
 
 from .shortcuts import redirect, render
@@ -128,9 +132,24 @@ def signup_post_view(request: Request,
     return redirect("/login")
 
 
+@app.post('/update-index', response_class=HTMLResponse)
+def htmx_update_index_view(request:Request):
+    count = update_index()
+    return HTMLResponse(f"({count}) Refreshed")
 
 
-@app.get("/users")
-def users_list_view():
-    q = User.objects.all().limit(10)
-    return list(q)
+@app.get("/search", response_class=HTMLResponse)
+def search_detail_view(request:Request, q:Optional[str] = None):
+    query = None
+    context = {}
+    if q is not None:
+        query = q
+        results = search_index(query)
+        hits = results.get('hits') or []
+        num_hits = results.get('nbHits')
+        context = {
+            "query": query,
+            "hits": hits,
+            "num_hits": num_hits
+        }
+    return render(request, "search/detail.html", context)
