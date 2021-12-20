@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     session_duration: int = Field(default=86400)
     algolia_app_id: str
     algolia_api_key: str
-    aloglia_index_name: str
+    algolia_index_name: str
 
     class Config:
         env_file = '.env'
