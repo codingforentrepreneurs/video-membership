@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class='row'>
+    <div class='col-md-4 text-center mx-auto'>
+<h1>Logout</h1>
+
+{% include 'snippets/form_errors.html' %}
+
+{% if not request.user.is_authenticated %}
+    <p>Login Required. Please go <a href='/login'>here to login</a>.</p>
+{% else %}
+<form method='POST'>
+    <p>Would you like to logout?</p>
+    <button class='btn btn-primary mt-2' type='submit' >Yes, logout. </button>
+</form>
+{% endif %}
+</div>
+
+</div>
+{% endblock %}

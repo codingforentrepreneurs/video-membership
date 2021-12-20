@@ -1,5 +1,7 @@
 import json
 import pathlib
+from typing import Optional
+
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -67,14 +69,15 @@ def account_view(request: Request):
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
-    session_id = request.cookies.get("session_id") or None
-    return render(request, "auth/login.html", { "logged_in": session_id is not None})
+    return render(request, "auth/login.html", {})
 
 
 @app.post("/login", response_class=HTMLResponse)
 def login_post_view(request: Request, 
     email: str=Form(...), 
-    password: str = Form(...)):
+    password: str = Form(...),
+    next: Optional[str] = "/"
+    ):
 
     raw_data  = {
         "email": email,
@@ -88,8 +91,20 @@ def login_post_view(request: Request,
             }
     if len(errors) > 0:
         return render(request, "auth/login.html", context, status_code=400)
-    return redirect("/", cookies=data)
+    if "http://127.0.0.1" not in next:
+        next = '/'
+    return redirect(next, cookies=data)
 
+
+@app.get("/logout", response_class=HTMLResponse)
+def logout_get_view(request: Request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    return render(request, "auth/logout.html", {})
+
+@app.post("/logout", response_class=HTMLResponse)
+def logout_post_view(request: Request):
+    return redirect("/login", remove_session=True)
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_get_view(request: Request):
